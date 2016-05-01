@@ -1,11 +1,19 @@
 import flask
 from flask import jsonify, request, Response
 from jsonpickle import json
-
+from PenMap import PenMap
+from Team import Team
+from Parcel import Parcel, ParcelsHandler
 
 app = flask.Flask(__name__)
-teams = {}
 
+#
+# Model
+#
+teams = {}
+robots_map = PenMap.simple_builder()
+parcels_handler = ParcelsHandler(Parcel.simple_builder())
+# end Model
 
 @app.route("/")
 def root():
@@ -24,12 +32,35 @@ def register_team(team_id):
         data = request.data
         print data
         if str(data).find("0x", 0, 2) is 0:
-            teams[team_id] = str(data)
-            return "OK"
+            teams[team_id] = Team(team_id, str(data))
+            return Response(response="OK", status=200)
         else:
-            return "SORRY"
-    #
-    # return jsonify(environment_configuration=environment_configuration, virtual_objects=a)
+            return Response(response="SORRY", status=200)
+            #
+            # return jsonify(environment_configuration=environment_configuration, virtual_objects=a)
+
+
+
+@app.route("/robots/<team_id>/<security_key>", methods=['DELETE'])
+def delete_team(team_id, security_key):
+    if teams.has_key(team_id):
+        if teams[team_id].is_valid_security_key(security_key):
+            teams.pop(team_id, None) # removes team from teams
+            return Response(response="OK", status=200)
+        else:
+            return Response(response="SORRY", status=403)
+    else:
+        return Response(response="SORRY", status=404)
+
+@app.route("/map", methods=['GET'])
+def get_map():
+    response_raw = robots_map.toJSON()
+    return Response(status=200, response=response_raw)
+
+@app.route("/parcels", methods=['GET'])
+def get_parcels():
+    response_raw = parcels_handler.toJSON()
+    return Response(status=200, response=response_raw)
 
 
 # @app.route("/virtualEnvironment", methods=['POST'])
@@ -79,5 +110,5 @@ def register_team(team_id):
 #         return Response(status=409)
 #
 
-
-app.run(host="0.0.0.0")
+if __name__ == "__main__":
+    app.run(host="0.0.0.0")

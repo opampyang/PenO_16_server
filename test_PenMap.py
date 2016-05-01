@@ -13,8 +13,14 @@ class TestMap:
 
     def test_simple_map(self):
         map = PenMap()
-        map.addVertice(3, 2, 4, None)
-        map.addVertice(1, 3, 4, None)
+        map.addVertice(1, 3, 2, 4, None)
+        map.addVertice(2, 1, 3, 4, None)
+
+        map.addEdge(1, 2, 0.3)
+        map.addEdge(1, 3, 0.5)
+        map.addEdge(3, 1, 0.5)
+
+
 
         # prin
         # t json.dumps({"vertices": map.vertices, "edges": map.edges})

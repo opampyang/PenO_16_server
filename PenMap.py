@@ -25,13 +25,31 @@ class PenMap(object):
         self.vertices = []
         self.edges = []
 
-    def addVertice(self, origin, straight, left, right):
-        self.vertices.append(Vertice(origin, straight, left, right))
+    def addVertice(self, vertice_index, origin, straight, left, right):
+        self.vertices.append([vertice_index, Vertice(origin, straight, left, right)])
 
     def addEdge(self, origin_id, destination_id, distance):
         self.edges.append(Edge(origin_id, destination_id, distance))
 
 
+    def toJSON(self):
+        return MyEncoder().encode(self)
+
+    @staticmethod
+    def simple_builder():
+        robots_map = PenMap()
+        robots_map.addVertice(1, 3, 2, 4, None)
+        robots_map.addVertice(2, 1, 3, 4, None)
+
+        robots_map.addEdge(1, 2, 0.3)
+        robots_map.addEdge(1, 3, 0.5)
+        robots_map.addEdge(3, 1, 0.5)
+
+        return robots_map
+
 class MyEncoder(JSONEncoder):
     def default(self, o):
-        return o.__dict__
+        if isinstance(o, Edge):
+            return [o.origin_id, o.destination_id, o.distance]
+        else:
+            return o.__dict__
