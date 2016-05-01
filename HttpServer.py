@@ -79,7 +79,7 @@ def allocate_parcel_to_team(team_id, parcel_id):
 
 
 @app.route("/robots/<team_id>/delivered/<int:parcel_id>", methods=['PUT'])
-def allocate_parcel_to_team(team_id, parcel_id):
+def deliver_parcel_by_team(team_id, parcel_id):
     security_key = request.data
 
     #FIXME, add the authentication logic to its proper place
@@ -94,17 +94,23 @@ def allocate_parcel_to_team(team_id, parcel_id):
 
 
 @app.route("/positions/<team_id>/<int:origin>/<int:destination>", methods=['PUT'])
-def allocate_parcel_to_team(team_id, origin, destination):
+def deliver_parcel_to_team(team_id, origin, destination):
     security_key = request.data
 
     #FIXME, add the authentication logic to its proper place
-    if teams.has_key(team_id) and teams[team_id].is_valid_security_key(security_key):
+    if teams.has_key(team_id) and teams[team_id].is_valid_security_key(security_key) and robots_map.is_valid_position(origin, destination):
         teams[team_id].set_current_position(origin, destination)
         return Response(status=200, response="OK")
     else:
         return Response(status=403, response="SORRY")
 
 
+@app.route("/positions", methods=['GET'])
+def get_position():
+    positions = []
+    for key, elem in teams.items():
+        positions.append(elem.get_position())
+    return jsonify({"positions": positions})
 
 
 # @app.route("/virtualEnvironment", methods=['POST'])

@@ -31,6 +31,40 @@ class PenMap(object):
     def addEdge(self, origin_id, destination_id, distance):
         self.edges.append(Edge(origin_id, destination_id, distance))
 
+    def is_valid_position(self, v1, v2):
+        for e in self.edges:
+            if e.origin_id == v1 or e.destination_id == v1:
+                if v1 == v2:
+                    return True
+                else:
+                    if e.destination_id == v2:
+                        return True
+        return False
+
+        #
+        #
+        #
+        # if v1 == v2:
+        #     i = 0
+        #     for v in self.vertices:
+        #         if v1 == v[0] or v2 == v[0]:
+        #             i = i + 1
+        #
+        #     if i == 2:
+        #         return True
+        #     else:
+        #         return False
+        # else:
+        #     ret = False
+        #     for v in self.vertices:
+        #         if v1 == v[0]:
+        #             for e in self.edges:
+        #                 if e.origin_id == v1 and e.destination_id == v2:
+        #                     ret = True
+        #     if ret is True:
+        #         return True
+        #     else:
+        #         return False
 
     def toJSON(self):
         return MyEncoder().encode(self)

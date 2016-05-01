@@ -19,3 +19,6 @@ class Team:
             return True
         else:
             return False
+
+    def get_position(self):
+        return [self.team_id, self.vertice_id1, self.vertice_id2]
