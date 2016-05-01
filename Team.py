@@ -5,8 +5,10 @@ __author__ = 'mario'
 class Team:
     """ Team representation. """
     def __init__(self, team_id, security_key):
-        self.name = team_id
+        self.team_id = team_id
         self.security_key = security_key
+        self.vertice_id1 = 0
+        self.vertice_id2 = 0
 
     def set_current_position(self, vertice_id1, vertice_id2):
         self.vertice_id1 = vertice_id1

@@ -63,6 +63,50 @@ def get_parcels():
     return Response(status=200, response=response_raw)
 
 
+@app.route("/robots/<team_id>/claim/<int:parcel_id>", methods=['PUT'])
+def allocate_parcel_to_team(team_id, parcel_id):
+    security_key = request.data
+
+    #FIXME, add the authentication logic to its proper place
+    if teams.has_key(team_id) and teams[team_id].is_valid_security_key(security_key):
+        ret = parcels_handler.claim_parcel(team_id, parcel_id)
+        if ret is True:
+            return Response(status=200, response="OK")
+        else:
+            return Response(status=403, response="SORRY-already claimed")
+    else:
+        return Response(status=403, response="SORRY")
+
+
+@app.route("/robots/<team_id>/delivered/<int:parcel_id>", methods=['PUT'])
+def allocate_parcel_to_team(team_id, parcel_id):
+    security_key = request.data
+
+    #FIXME, add the authentication logic to its proper place
+    if teams.has_key(team_id) and teams[team_id].is_valid_security_key(security_key):
+        ret = parcels_handler.delivered(team_id, parcel_id)
+        if ret is True:
+            return Response(status=200, response="OK")
+        else:
+            return Response(status=403, response="SORRY-already delivered")
+    else:
+        return Response(status=403, response="SORRY")
+
+
+@app.route("/positions/<team_id>/<int:origin>/<int:destination>", methods=['PUT'])
+def allocate_parcel_to_team(team_id, origin, destination):
+    security_key = request.data
+
+    #FIXME, add the authentication logic to its proper place
+    if teams.has_key(team_id) and teams[team_id].is_valid_security_key(security_key):
+        teams[team_id].set_current_position(origin, destination)
+        return Response(status=200, response="OK")
+    else:
+        return Response(status=403, response="SORRY")
+
+
+
+
 # @app.route("/virtualEnvironment", methods=['POST'])
 # def add_object():
 #     data = request.get_json(force=True)
