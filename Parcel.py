@@ -225,8 +225,34 @@ class Parcel:
         parcels.append(Parcel(	200	,	11	, 	12	))
         return parcels
 
+class ParcelsHandler:
+    def __init__(self, parcels):
+        self.available_parcels = parcels
+        self.on-the-road-parcels = []
+        self.delivered-parcels = []
 
 
+    def claim_parcel(self, team_id, parcel_id):
+        ret = False
+        for parcel in self.available_parcels:
+            if parcel.parcel_id == parcel_id and not parcel.has_team(team_id):
+                parcel.add_team_id(team_id)
+                self.available-parcels.remove(parcel)
+                self.on-the-road-parcels.append(parcel)
+                ret = True
+
+        return ret
+
+    def delivered(self, team_id, parcel_id):
+        ret = False
+        for parcel in self.on-the-road-parcels:
+            if parcel.parcel_id == parcel_id and parcel.has_team(team_id):
+                self.on-the-road-parcels.remove(parcel)
+                self.delivered-parcels.append(parcel)
+                ret = True
+
+        return ret
+"""
 class ParcelsHandler:
     def __init__(self, parcels):
         self.available_parcels = parcels
@@ -254,7 +280,7 @@ class ParcelsHandler:
                 ret = True
 
         return ret
-
+"""
     def toJSON(self):
         return MyEncoder().encode(self)
 
