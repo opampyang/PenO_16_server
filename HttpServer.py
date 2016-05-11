@@ -29,7 +29,7 @@ def register_team(team_id):
         return "SORRY already registered!"
     else:
         # data = request.get_json(force=True)
-        data = request.data
+        data = request.get_data()
         print data
         if str(data).find("0x", 0, 2) is 0:
             teams[team_id] = Team(team_id, str(data))
@@ -65,7 +65,7 @@ def get_parcels():
 
 @app.route("/robots/<team_id>/claim/<int:parcel_id>", methods=['PUT'])
 def allocate_parcel_to_team(team_id, parcel_id):
-    security_key = request.data
+    security_key = request.get_data()
 
     #FIXME, add the authentication logic to its proper place
     if teams.has_key(team_id) and teams[team_id].is_valid_security_key(security_key):
@@ -80,7 +80,7 @@ def allocate_parcel_to_team(team_id, parcel_id):
 
 @app.route("/robots/<team_id>/delivered/<int:parcel_id>", methods=['PUT'])
 def deliver_parcel_by_team(team_id, parcel_id):
-    security_key = request.data
+    security_key = request.get_data()
 
     #FIXME, add the authentication logic to its proper place
     if teams.has_key(team_id) and teams[team_id].is_valid_security_key(security_key):
@@ -95,7 +95,7 @@ def deliver_parcel_by_team(team_id, parcel_id):
 
 @app.route("/positions/<team_id>/<int:origin>/<int:destination>", methods=['PUT'])
 def deliver_parcel_to_team(team_id, origin, destination):
-    security_key = request.data
+    security_key = request.get_data()
 
     #FIXME, add the authentication logic to its proper place
     if teams.has_key(team_id) and teams[team_id].is_valid_security_key(security_key) and robots_map.is_valid_position(origin, destination):
@@ -113,52 +113,6 @@ def get_position():
     return jsonify({"positions": positions})
 
 
-# @app.route("/virtualEnvironment", methods=['POST'])
-# def add_object():
-#     data = request.get_json(force=True)
-#     if data:
-#         processed_data = json.loads(data)
-#         virtual_object_data = processed_data["cells"]
-#         virtual_object_name = processed_data["name"]
-#         if virtual_object_data:
-#             vo = VirtualObject(virtual_object_data, virtual_object_name)
-#             try:
-#                 _virtual_environment.add_virtual_object(vo)
-#             except ValueError as e:
-#                 return Response(response=e, status=409)
-#
-#             return Response(status=200)
-#
-#     else:
-#         return Response(status=400)
-#
-# @app.route("/virtualEnvironment", methods=['DELETE'])
-# def delete_object():
-#     data = request.get_json(force=True)
-#     if data:
-#         processed_data = json.loads(data)
-#         virtual_object_data = processed_data["cells"]
-#         virtual_object_name = processed_data["name"]
-#         if virtual_object_data:
-#             vo = VirtualObject(virtual_object_data, virtual_object_name)
-#             if _virtual_environment.remove_virtual_object(vo):
-#                 return Response(status=200)
-#             else:
-#                 return Response(response="Virtual Object Not found.", status=409)
-#
-#
-#
-#     else:
-#         return Response(status=400)
-#
-# @app.route("/virtualEnvironment/reset", methods=['POST'])
-# def reset_pose():
-#     _set_reset_pose_true()
-#     if get_reset_pose():
-#         return Response(status=200)
-#     else:
-#         return Response(status=409)
-#
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
