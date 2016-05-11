@@ -139,5 +139,16 @@ class MyEncoder(JSONEncoder):
     def default(self, o):
         if isinstance(o, Edge):
             return [o.origin_id, o.destination_id, o.distance]
+        if isinstance(o, Vertice):
+            v = {}
+            v['origin'] = o.origin
+            if o.straight is not None:
+                v['straight'] = o.straight
+            if o.left is not None:
+                v['left'] = o.left
+            if o.right is not None:
+                v['right'] = o.right
+
+            return v
         else:
             return o.__dict__
