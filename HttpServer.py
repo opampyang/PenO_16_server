@@ -112,7 +112,12 @@ def get_position():
         positions.append(elem.get_position())
     return jsonify({"positions": positions})
 
-
+@app.after_request
+def add_header(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
+    response.headers['cache-control'] = 'no-cache'
+    return response
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
