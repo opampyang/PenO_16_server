@@ -69,4 +69,7 @@ class MyEncoder(JSONEncoder):
             else:
                 return [o.parcel_id, o.origin, o.destination]
         else:
-            return o.__dict__
+            # return o.__dict__
+            return {'available-parcels': o.available_parcels,
+                    'on-the-road-parcels': o.on_the_road_parcels,
+                    'delivered-parcels': o.delivered_parcels}
