@@ -11,7 +11,7 @@ class Parcel:
 
 
     def has_team(self, team_id):
-        if self.team_id is team_id:
+        if self.team_id == team_id:
             return True
         else:
             return False
