@@ -31,6 +31,7 @@ def register_team(team_id):
         # data = request.get_json(force=True)
         data = request.get_data()
         print data
+        teams[team_id] = Team(team_id, str(data))
         return Response(response="OK", status=200)
 #        if str(data).find("0x", 0, 2) is 0:
 #            teams[team_id] = Team(team_id, str(data))
